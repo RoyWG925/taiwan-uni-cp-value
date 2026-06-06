@@ -1,7 +1,14 @@
 """方法論說明 — 資料來源、處理流程、限制與誠實聲明。"""
+import sys
+from pathlib import Path
+
 import streamlit as st
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from styles import inject_global_css
+
 st.set_page_config(page_title='方法論', page_icon='📖', layout='wide')
+inject_global_css()
 
 st.title('📖 方法論與資料說明')
 

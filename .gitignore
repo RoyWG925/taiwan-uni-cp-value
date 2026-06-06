@@ -3,14 +3,15 @@ __pycache__/
 *.pyc
 _stream_log.txt
 screenshots/
+screenshots_deployed/
 verify_screenshots.py
+screenshot_deployed.py
 inspect_html.py
 inspect_proposal_pdf.py
 inspect_bcode.py
 inspect_bcode4_full.py
 inspect_manual.py
 inspect_pdf.py
-inspect_html.py
 
 # 大檔案、原始爬蟲產物（已聚合到 final_dataset_v2.csv）
 data/scrape_frame_2.html

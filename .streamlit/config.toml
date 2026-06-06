@@ -1,0 +1,18 @@
+[theme]
+# Editorial 風 — 深藍 + 暖灰背景 + 中文友善
+primaryColor = "#0E4D92"
+backgroundColor = "#FAFAF7"
+secondaryBackgroundColor = "#EEEAE0"
+textColor = "#1A1A1A"
+font = "sans serif"
+
+[client]
+# 隱藏 Streamlit Cloud 的「Fork / GitHub / Manage app」工具列
+toolbarMode = "viewer"
+showSidebarNavigation = true
+
+[server]
+runOnSave = true
+
+[browser]
+gatherUsageStats = false

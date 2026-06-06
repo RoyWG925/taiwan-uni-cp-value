@@ -1,4 +1,5 @@
 """學門詳情：選一個學門，看它的所有 校系錄取分數分布 + 薪資 P25-P75 + 跟其他比較。"""
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -6,9 +7,13 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from styles import inject_global_css
+
 DATA = Path(__file__).parent.parent / 'data'
 
 st.set_page_config(page_title='學門詳情', page_icon='📊', layout='wide')
+inject_global_css()
 
 
 @st.cache_data

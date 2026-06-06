@@ -2,15 +2,20 @@
 查我的科系：使用者輸入學校 + 系名（或直接從下拉選），
 顯示該校系對應的學門 / P25-P50-P75 / 殘差 / 在散佈圖的位置。
 """
+import sys
 from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from styles import inject_global_css
+
 DATA = Path(__file__).parent.parent / 'data'
 
 st.set_page_config(page_title='查我的科系', page_icon='🔍', layout='wide')
+inject_global_css()
 
 
 @st.cache_data

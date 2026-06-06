@@ -12,6 +12,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
+from styles import inject_global_css, hero
+
 DATA = Path(__file__).parent / 'data'
 
 # ─────────────────────────────────────────────────────────
@@ -22,7 +24,13 @@ st.set_page_config(
     page_icon='🎓',
     layout='wide',
     initial_sidebar_state='expanded',
+    menu_items={
+        'About': '大學科系 CP 值大檢驗 — 41111017E 王語揚',
+        'Report a bug': None,
+        'Get help': None,
+    },
 )
+inject_global_css()
 
 
 # ─────────────────────────────────────────────────────────
@@ -66,15 +74,21 @@ with st.sidebar:
 
 
 # ─────────────────────────────────────────────────────────
-# Header
+# Hero
 # ─────────────────────────────────────────────────────────
-st.title('🎓 大學科系「CP 值」大檢驗')
-st.subheader('錄取分數越高，畢業薪資真的越高嗎？')
+hero(
+    title='大學科系「CP 值」大檢驗',
+    subtitle='錄取分數越高，畢業薪資真的越高嗎？',
+    icon='🎓',
+)
 
 st.markdown('''
-本研究結合 **大學分發委員會 114 學年錄取分數** 與 **勞動部 114 年 7 月畢業生薪資**，
+本研究結合 **大考分發 114 學年錄取分數**（1,772 校系）與 **勞動部 114 年 7 月畢業生薪資**（25 學門），
 用真實資料檢驗一個所有高中生都想問的問題：
+
 > 分數越高的科系，畢業後薪水真的越高嗎？
+
+答案是「**對，但只解釋了 19% 的薪資差異**」。剩下 81% 由「學門類別」決定。
 ''')
 
 # Hero stats

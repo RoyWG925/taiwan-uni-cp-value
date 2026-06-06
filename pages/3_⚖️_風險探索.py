@@ -2,6 +2,7 @@
 風險探索：用 (P75-P25)/P50 看每個學門的薪資離散度，
 搭配 P50 雙軸視覺化「贏家通吃」vs「保守型」學門。
 """
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -9,9 +10,13 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from styles import inject_global_css
+
 DATA = Path(__file__).parent.parent / 'data'
 
 st.set_page_config(page_title='風險探索', page_icon='⚖️', layout='wide')
+inject_global_css()
 
 
 @st.cache_data
