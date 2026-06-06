@@ -24,7 +24,7 @@
 
 ```bash
 pip install -r requirements.txt
-streamlit run Home.py
+streamlit run app.py
 ```
 
 預設 http://localhost:8501。
