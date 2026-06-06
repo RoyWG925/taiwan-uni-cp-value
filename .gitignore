@@ -1,0 +1,22 @@
+# 開發/驗證用，不上 deploy
+__pycache__/
+*.pyc
+_stream_log.txt
+screenshots/
+verify_screenshots.py
+inspect_html.py
+inspect_proposal_pdf.py
+inspect_bcode.py
+inspect_bcode4_full.py
+inspect_manual.py
+inspect_pdf.py
+inspect_html.py
+
+# 大檔案、原始爬蟲產物（已聚合到 final_dataset_v2.csv）
+data/scrape_frame_2.html
+data/final_dataset_v1.csv
+data/uac_xuemen_agg.csv
+
+# OS
+.DS_Store
+Thumbs.db
