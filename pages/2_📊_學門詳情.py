@@ -40,9 +40,9 @@ c1, c2, c3, c4 = st.columns(4)
 c1.metric('三分群', xm_row['三分群'])
 c2.metric('校系數', f"{xm_row['dept_count']} 個")
 c3.metric('勞工總數', f"{int(xm_row['employed_n']):,} 人")
-c4.metric('全國學門 P50 排名',
+c4.metric('P50 由高至低名次',
           f"{(agg['P50'] >= xm_row['P50']).sum()} / {len(agg)}",
-          help='P50 中位薪資在 25 學門中的名次')
+          help='只表示 P50 中位薪資在 25 學門中的排序，不代表學門價值排名')
 
 st.divider()
 
@@ -80,11 +80,11 @@ fig_bucket.update_layout(height=400, showlegend=False)
 st.plotly_chart(fig_bucket, use_container_width=True)
 
 c1, c2, c3 = st.columns(3)
-c1.metric('P25 低標', f"{int(xm_row['P25']):,} 元")
+c1.metric('P25 下緣', f"{int(xm_row['P25']):,} 元")
 c2.metric('P50 中位', f"{int(xm_row['P50']):,} 元")
-c3.metric('P75 高標', f"{int(xm_row['P75']):,} 元")
+c3.metric('P75 上緣', f"{int(xm_row['P75']):,} 元")
 
-st.caption(f"風險指標 (P75-P25)/P50 = **{xm_row['風險指標']:.3f}**　|　"
+st.caption(f"薪資分化指標 (P75-P25)/P50 = **{xm_row['風險指標']:.3f}**　|　"
            f"OLS 殘差 = **{int(xm_row['residual_P50']):+,} 元**")
 
 st.divider()

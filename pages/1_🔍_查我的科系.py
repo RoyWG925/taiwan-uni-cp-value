@@ -35,8 +35,10 @@ agg = load_final_v2()
 # 只保留已對應到學門、且學門在 final_v2 內的校系
 uac_valid = uac[
     uac['學門'].notna() &
-    uac['學門'].isin(agg['學門'])
+    uac['學門'].isin(agg['學門']) &
+    uac['錄取分數百分位'].notna()
 ].copy()
+uac_valid['系組名'] = uac_valid['系組名'].str.replace(r'\s+', ' ', regex=True).str.strip()
 
 st.title('🔍 查我的科系所在位置')
 st.markdown('''
@@ -76,6 +78,10 @@ if school_sel != '(請選擇)' and dept_sel != '(請選擇)':
     st.divider()
     st.markdown(f'### 🎯 結果：**{school_sel} {dept_sel}**')
     st.markdown(f'對應的學門大類是 **{xuemen}**（三分群：{xm_row["三分群"]}）')
+    st.warning(
+        '注意：薪資資料是「學門層級」統計，不是此校系的畢業薪資預測。'
+        '本頁只用校系資料定位所屬學門，薪資解讀請停在學門層級。'
+    )
 
     # Stats
     c1, c2, c3, c4 = st.columns(4)
@@ -84,7 +90,7 @@ if school_sel != '(請選擇)' and dept_sel != '(請選擇)':
     c2.metric('我的校系達成率', f"{row['達成率']:.1f}%",
               help='錄取分數 / 加權滿分')
     c3.metric('我的校系全國百分位', f"{row['錄取分數百分位']:.1f}",
-              help=f'在全國 1772 個校系中的相對位置')
+              help=f'在全國 1,787 個校系中的相對位置')
     c4.metric(f'學門中位 PR', f"{xm_row['median_pr_pct']:.1f}",
               delta=f"{row['錄取分數百分位'] - xm_row['median_pr_pct']:+.1f} vs 學門中位",
               help='該學門所有校系的中位錄取分數百分位')
@@ -92,19 +98,19 @@ if school_sel != '(請選擇)' and dept_sel != '(請選擇)':
     st.markdown('---')
     st.markdown(f'### 💰 {xuemen} 的薪資分布（勞動部 114/07）')
     s1, s2, s3, s4 = st.columns(4)
-    s1.metric('P25 (低標)', f"{xm_row['P25']:,} 元")
+    s1.metric('P25 (下緣)', f"{xm_row['P25']:,} 元")
     s2.metric('P50 (中位數)', f"{xm_row['P50']:,} 元")
-    s3.metric('P75 (高標)', f"{xm_row['P75']:,} 元")
-    s4.metric('風險指標', f"{xm_row['風險指標']:.3f}",
-              help='(P75-P25)/P50：越大薪資離散度越高、贏家通吃；越小薪資越集中')
+    s3.metric('P75 (上緣)', f"{xm_row['P75']:,} 元")
+    s4.metric('薪資分化指標', f"{xm_row['風險指標']:.3f}",
+              help='(P75-P25)/P50：越大代表薪資分布越寬；不一定是壞事，也可能代表上緣較高')
 
     # 殘差解讀
     resid = xm_row['residual_P50']
     if resid > 3000:
-        verdict = f'🔵 **被低估** (殘差 {resid:+,} 元)：同 PR 應得 {xm_row["P50_pred"]:,}，但實際 {xm_row["P50"]:,}，多賺 {resid:,}'
+        verdict = f'🔵 **薪資高於模型預期** (殘差 {resid:+,} 元)：模型預測 {xm_row["P50_pred"]:,}，實際 {xm_row["P50"]:,}'
         color = 'success'
     elif resid < -3000:
-        verdict = f'🔴 **被高估** (殘差 {resid:+,} 元)：同 PR 應得 {xm_row["P50_pred"]:,}，但實際 {xm_row["P50"]:,}，少 {-resid:,}'
+        verdict = f'🔴 **薪資低於模型預期** (殘差 {resid:+,} 元)：模型預測 {xm_row["P50_pred"]:,}，實際 {xm_row["P50"]:,}'
         color = 'warning'
     else:
         verdict = f'⚪ **大致符合** (殘差 {resid:+,} 元)：薪資跟錄取分數的關係大致符合全國趨勢'
@@ -153,7 +159,11 @@ if school_sel != '(請選擇)' and dept_sel != '(請選擇)':
         marker=dict(size=18, color='red', symbol='cross-thin-open',
                     line=dict(width=3, color='red')),
         name=f'你的校系 ({row["錄取分數百分位"]:.0f}, 學門 P50)',
-        hovertext=f'{school_sel} {dept_sel}<br>校系 PR 百分位：{row["錄取分數百分位"]:.1f}',
+        hovertext=(
+            f'{school_sel} {dept_sel}<br>'
+            f'校系 PR 百分位：{row["錄取分數百分位"]:.1f}<br>'
+            f'Y 軸為所屬學門 P50，不是此校系薪資'
+        ),
         hoverinfo='text',
     ))
 
@@ -167,5 +177,7 @@ if school_sel != '(請選擇)' and dept_sel != '(請選擇)':
     st.plotly_chart(fig, use_container_width=True)
 
     st.caption(
-        '⭐ 金色星星 = 你的學門大類在 25 學門裡的位置；🔴 紅色十字 = 你的校系錄取 PR 百分位'
+        '⭐ 金色星星 = 你的學門在 25 學門中的位置；'
+        '🔴 紅色十字 = 你的校系錄取 PR 百分位，Y 軸仍使用該學門 P50，'
+        '不代表該校系畢業薪資。'
     )
